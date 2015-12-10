@@ -43,6 +43,12 @@ var stickydiv_1 = require('../stickydiv/stickydiv');
 var StickyDivDemoCmp = (function () {
     function StickyDivDemoCmp() {
     }
+    StickyDivDemoCmp.prototype.onClick = function () {
+        var w = window.open();
+        w.document.open();
+        w.document.write("<h1>Hello World!</h1><p>To be removed in dist. version</p>");
+        w.document.close();
+    };
     StickyDivDemoCmp = __decorate([
         angular2_1.Component({
             selector: 'sticky-div-demo',
