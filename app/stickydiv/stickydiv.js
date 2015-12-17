@@ -31,7 +31,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 //////////////////////////////////////////////////////////////////////////////////
 // header-end
 //
-var angular2_1 = require('angular2/angular2');
+var core_1 = require('angular2/core');
+var common_1 = require('angular2/common');
 ///////////////////////////////////////////////////////////////////////////////
 //
 // A configurable sticky div component
@@ -79,6 +80,9 @@ var StickyDivCmp = (function () {
     // Note: @Input may not be injected yet!
     //
     StickyDivCmp.prototype.ngAfterViewInit = function () {
+        //console.log('-----------------------+------------------------');
+        //console.log('[Trace] ngAfterViewInit()  id       ' + this.id_div2_);
+        //console.log('[Trace] ngAfterViewInit()  is_fixed ' + this.is_div2_fixed_);
         this.div2_elm_ = document.getElementById(this.id_div2_);
         var bbox = this.div2_elm_.getBoundingClientRect();
         this.div_height_ = bbox.height;
@@ -91,6 +95,9 @@ var StickyDivCmp = (function () {
     // value associated with this maxscroll property
     //
     StickyDivCmp.prototype.ngAfterViewChecked = function () {
+        //console.log('-----------------------+------------------------');
+        //console.log('[Trace] ngAfterViewCheck() id       ' + this.id_div2_);
+        //console.log('[Trace] ngAfterViewCheck() is_fixed ' + this.is_div2_fixed_);
         if ('maxscroll' in this) {
             this.is_sticky_ = true;
             this.y_offset_ = 0 + this.maxscroll;
@@ -107,8 +114,8 @@ var StickyDivCmp = (function () {
             }
         }
     };
-    StickyDivCmp.prototype.setStyles = function (is_fixed) {
-        if (is_fixed) {
+    StickyDivCmp.prototype.setStyles = function () {
+        if (this.is_div2_fixed_) {
             return {
                 'position': 'fixed',
                 'padding': '0px',
@@ -128,6 +135,9 @@ var StickyDivCmp = (function () {
     // max amount, it becomes fixed.
     //
     StickyDivCmp.prototype.onScroll = function () {
+        //console.log('-----------------------+------------------------');
+        //console.log('[Trace] onScroll()     id       ' + this.id_div2_);
+        //console.log('[Trace] onScroll()     is_fixed ' + this.is_div2_fixed_);
         if (this.is_sticky_) {
             this.is_div2_fixed_ = (window.pageYOffset >= this.y_offset_);
         }
@@ -137,6 +147,9 @@ var StickyDivCmp = (function () {
     // to the top position.
     //
     StickyDivCmp.prototype.onResize = function () {
+        //console.log('-----------------------+------------------------');
+        //console.log('[Trace] onResize()     id       ' + this.id_div2_);
+        //console.log('[Trace] onResize()     is_fixed ' + this.is_div2_fixed_);
         window.scroll(0, 0);
         if (this.is_sticky_) {
             this.do_resize_ = true;
@@ -149,15 +162,15 @@ var StickyDivCmp = (function () {
     };
     StickyDivCmp.instance_cnt_ = 0;
     __decorate([
-        angular2_1.Input(), 
+        core_1.Input(), 
         __metadata('design:type', Object)
     ], StickyDivCmp.prototype, "maxscroll", void 0);
     StickyDivCmp = __decorate([
-        angular2_1.Component({
-            selector: 'sticky-div',
-            template: "\n  <!--\n    The 2 div below make the sticky div magic\n    We'll comment on the first after.\n    The second div includes the user content with ng-content,\n    after it has scrolled to it max position,\n    its position style is changed to 'fixed' with a high z-index, therefore\n    it remains always visible and the scrollable content located below\n    simply passes under it.\n\n    When the second div position is changed to 'fixed', it is removed from the\n    scrollable content, so we must add a content of the same height in place\n    of the the navbar. The first div is doing just this\n  -->\n\n    <div [id]=\"id_div_top_\"  (window:resize)=\"onResize()\">\n\n    <!-- div 1 -->\n\n    <div *ngIf=\"is_div2_fixed_\"\n      [style.height.px]=\"div_height_\"\n      [style.width.px]=\"div_width_\"\n      style=\"padding: 0; font-size: 12px; color: black; background-color: red\">\n      Ouch! If you see this text on the browser, you have a problem with\n      stick div id: {{id_div2_}}. It is likely that\n      the maxscroll value is not large enough, please\n      increase it.\n    </div>\n\n    <!-- div 2 -->\n\n    <div [id]=\"id_div2_\" [ngStyle]=\"setStyles(is_div2_fixed_)\"\n      (window:scroll)=\"onScroll()\">\n      <ng-content></ng-content>\n    </div>\n  </div>\n  ",
+        core_1.Component({
+            selector: 'gg-sticky-div',
+            template: "\n  <!--\n    The 2 div below make the sticky div magic\n    We'll comment on the first after.\n    The second div includes the user content with ng-content,\n    after it has scrolled to it max position,\n    its position style is changed to 'fixed' with a high z-index, therefore\n    it remains always visible and the scrollable content located below\n    simply passes under it.\n\n    When the second div position is changed to 'fixed', it is removed from the\n    scrollable content, so we must add a content of the same height in place\n    of the the navbar. The first div is doing just this\n  -->\n\n    <div [id]=\"id_div_top_\"  (window:resize)=\"onResize()\">\n\n    <!-- div 1 -->\n\n    <div *ngIf=\"is_div2_fixed_\"\n      [style.height.px]=\"div_height_\"\n      [style.width.px]=\"div_width_\"\n      style=\"padding: 0; font-size: 12px; color: black; background-color: red\">\n      Ouch! If you see this text on the browser, you have a problem with\n      stick div id: {{id_div2_}}. It is likely that\n      the maxscroll value is not large enough, please\n      increase it.\n    </div>\n\n    <!-- div 2 -->\n\n    <div [id]=\"id_div2_\" [ngStyle]=\"setStyles()\"\n      (window:scroll)=\"onScroll()\">\n      <ng-content></ng-content>\n    </div>\n  </div>\n  ",
             styles: ["\n  "],
-            directives: [angular2_1.NgIf, angular2_1.NgClass]
+            directives: [common_1.NgIf, common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [])
     ], StickyDivCmp);
