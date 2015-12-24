@@ -204,36 +204,42 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 //
                 // Details on the position calculation
                 //
-                //                    initial            final
+                //                    initial               final          !onbutton       
+                //  [3]---------------------------------------------------------> (= evt.clientX)
                 //
-                //  |---------->            (= base_  given by elm.getBoundingClientRect().left)
+                //  |--------->@              (= base_  given by elm.getBoundingClientRect().left)
                 //             @       +=======+            +=======+
-                //             +-------|       |------------|       |---+
-                //             +-------|   o   |------------|   o   |---+
-                //             +-------|     x |------------|     x |---+
+                //             +-------|       |------------|       |---------------------+
+                //             +-------|   o   |------------|   o   |-----------o---------+
+                //             +-------|     x |------------|     x |---------------------+
                 //                     +=======+            +=======+
-                //             |---------->     (= pos_)
-                //                        <->   (= delta_)
+                //             |---------->     (= pos)
+                //                        <->   (= offset)
                 //  [1]--------------------->   (= evt.clientX)
                 //  [2]-----------------------------------------> (= evt.clientX)
                 //
                 //  On initial mouse down, we can compute delta as we have:
-                //  evt.clientX = base_ + npos_ + delta_   [1]
+                //  evt.clientX[1] = base + pos + offset   
                 //
-                //  On mouse up, we can compute npos_ given by
-                //  evt.clientX = base_ + npos_ + delta_   [1]
+                //  On mouse move/up, we can compute npos_ given by
+                //  evt.clientX[2] = base + npos + offset   
+                //  => npos = evt.clientX[2] - (evt.clientX[1] - pos)
+                // 
+                //  Special case when rail is clicked [3], we assume a virtual [1], so we have: 
+                //  evt.clientX[3] = base + npos  
+                //  evt.clientX[1] = base + pos 
+                //  => npos = evt.clientX[3] - (evt.clientX[1]  - pos)
                 // Note the preventDefault to ensure that the future mouse events
                 // are not propagated to other elements
                 SvgSliderCmp.prototype.onMousedown = function (elm, evt, on_button) {
-                    this.base_ = elm.getBoundingClientRect().left;
                     evt.preventDefault();
                     this.button_is_down_ = true;
-                    this.delta_ = evt.clientX - (this.base_ + this.pos_);
+                    this.delta_ = evt.clientX - this.pos_;
                     if (!on_button) {
                         // special case when the mouse down occur on the slide zone
                         // and not on the slider button
-                        this.delta_ = 20;
-                        var pos = evt.clientX - (this.base_ + this.delta_);
+                        this.delta_ = elm.getBoundingClientRect().left;
+                        var pos = evt.clientX - this.delta_;
                         this.position_changed(pos);
                     }
                 };
@@ -243,7 +249,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 // <div *ngIf="button_is_down_"  (window:mousemove)="onMousemove($event)" ..
                 //
                 SvgSliderCmp.prototype.onMousemove = function (evt) {
-                    var pos = evt.clientX - (this.base_ + this.delta_);
+                    var pos = evt.clientX - this.delta_;
                     this.position_changed(pos);
                 };
                 //
@@ -292,7 +298,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 SvgSliderCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-svg-slider',
-                        template: "\n    <div #topslider id=\"slider\" style=\"margin:5px\">\n\n      <!-- special div which disable mousemove and mouseup event -->\n\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n      <svg  height=\"90\" preserveAspectRatio=\"xMinYMin meet\"\n            xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-60 -50 350 90\" version=\"1.1\" >\n\n        <!-- rail group -->\n\n        <g id=\"rail\" (mousedown)=\"onMousedown(topslider, $event, false)\">\n          <rect id=\"default-rail\" x=\"0\" y=\"-10\" [attr.width]=\"rail_length_\" height=\"20\" />\n          <!--\n          <rect id=\"default-rail\" x=\"0\" y=\"-10\" width=\"180\" height=\"20\" />\n          <path id=\"default-rail\" d=\"M 0 -10 v 20 h 180 v -20 z\" />\n          -->\n        </g>\n\n        <!-- runner group -->\n\n        <g  id=\"runner\" [attr.transform]=\"trans_pos_\"\n                        (mousedown)=\"onMousedown(topslider, $event, true)\" >\n\n          <g *ngIf=\"runner_style_is_circle_\" id=\"circle\">\n            <circle cx=\"0\" cy=\"0\" r=\"20\" />\n          </g>\n\n          <g  *ngIf=\"runner_style_is_label_\" id=\"label\">\n            <path id=\"panel\" d=\"M 0 0 L 10 -10 L 30 -10 L 30 -35 L -30 -35 L -30 -10 L -10 -10 z\"\n                style=\"color:black;fill:black\" />\n            <text id=\"text\" x=\"-17\" y=\"-17\" font-family=\"Verdana\" font-size=\"15\" fill=\"white\">{{ value_ | number:'1.1-1' }}</text>\n          </g>\n        </g>\n      </svg>\n    </div>\n  ",
+                        template: "\n    <div  id=\"slider\" style=\"margin:5px\">\n\n      <!-- special div which disable mousemove and mouseup event -->\n\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n      <svg  height=\"90\" preserveAspectRatio=\"xMinYMin meet\"\n            xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-60 -50 350 90\" version=\"1.1\" >\n\n        <!-- reference (0,0), no fill, no stroke -->\n\n        <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n        <!-- rail group -->\n\n        <g id=\"rail\" (mousedown)=\"onMousedown(railref, $event, false)\">\n          <rect id=\"default-rail\" x=\"0\" y=\"-10\" [attr.width]=\"rail_length_\" height=\"20\" />\n          <!--\n          <rect id=\"default-rail\" x=\"0\" y=\"-10\" width=\"180\" height=\"20\" />\n          <path id=\"default-rail\" d=\"M 0 -10 v 20 h 180 v -20 z\" />\n          -->\n        </g>\n\n        <!-- runner group -->\n\n        <g  id=\"runner\" [attr.transform]=\"trans_pos_\"\n                        (mousedown)=\"onMousedown(railref, $event, true)\" >\n\n          <g *ngIf=\"runner_style_is_circle_\" id=\"circle\">\n            <circle cx=\"0\" cy=\"0\" r=\"20\" />\n          </g>\n\n          <g  *ngIf=\"runner_style_is_label_\" id=\"label\">\n            <path id=\"panel\" d=\"M 0 0 L 10 -10 L 30 -10 L 30 -35 L -30 -35 L -30 -10 L -10 -10 z\"\n                style=\"color:black;fill:black\" />\n            <text id=\"text\" x=\"-17\" y=\"-17\" font-family=\"Verdana\" font-size=\"15\" fill=\"white\">{{ value_ | number:'1.1-1' }}</text>\n          </g>\n        </g>\n      </svg>\n    </div>\n  ",
                         directives: [common_1.FORM_DIRECTIVES]
                     }), 
                     __metadata('design:paramtypes', [])

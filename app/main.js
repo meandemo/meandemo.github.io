@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // header-end
 //
-System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser', './stickydivdemo/stickydivdemo', './sliderdemo/sliderdemo_simple'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser', './stickydivdemo/stickydivdemo', './sliderdemo/sliderdemo_simple', './sliderdemo/sliderdemo_service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -32,7 +32,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, browser_1, stickydivdemo_1, sliderdemo_simple_1, core_2;
+    var core_1, router_1, browser_1, stickydivdemo_1, sliderdemo_simple_1, sliderdemo_service_1, core_2;
     var HomeCmp, MainCmp;
     return {
         setters:[
@@ -51,6 +51,9 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
             },
             function (sliderdemo_simple_1_1) {
                 sliderdemo_simple_1 = sliderdemo_simple_1_1;
+            },
+            function (sliderdemo_service_1_1) {
+                sliderdemo_service_1 = sliderdemo_service_1_1;
             }],
         execute: function() {
             HomeCmp = (function () {
@@ -88,7 +91,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
             // we stay in prod mode until our code refactoring is completed
             //
             core_2.enableProdMode();
-            browser_1.bootstrap(MainCmp, [router_1.ROUTER_PROVIDERS]);
+            browser_1.bootstrap(MainCmp, [router_1.ROUTER_PROVIDERS, sliderdemo_service_1.SliderDemoService]);
         }
     }
 });
