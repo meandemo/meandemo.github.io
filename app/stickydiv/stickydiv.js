@@ -32,6 +32,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 // and used by getElementById()
                 //
                 function StickyDivCmp() {
+                    //@Input() height: any;
+                    this.heightChange = new core_1.EventEmitter();
                     this.is_sticky_ = false;
                     this.y_offset_ = 0;
                     this.div_width_ = 0;
@@ -41,6 +43,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.div_left_ = 0;
                     this.do_resize_ = false;
                     this.is_div2_fixed_ = false;
+                    this.sticky_style_ = {};
                     this.id_div_top_ = "sticky-top-magic-" + StickyDivCmp.instance_cnt_;
                     this.id_div2_ = "sticky-div2-magic-" + StickyDivCmp.instance_cnt_;
                     ++StickyDivCmp.instance_cnt_;
@@ -52,7 +55,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 //
                 StickyDivCmp.prototype.ngOnInit = function () {
                 };
-                StickyDivCmp.prototype.height = function () {
+                StickyDivCmp.prototype.accurate_height = function () {
                     return this.div_height_;
                 };
                 //
@@ -72,6 +75,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.div2_elm_ = document.getElementById(this.id_div2_);
                     var bbox = this.div2_elm_.getBoundingClientRect();
                     this.div_height_ = bbox.height;
+                    this.heightChange.emit(this.div_height_);
                     this.div_width_ = bbox.width;
                     this.div_initial_top_ = bbox.top;
                     this.div_left_ = bbox.left;
@@ -92,11 +96,13 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                             this.is_div2_fixed_ = false;
                             var bbox = this.div2_elm_.getBoundingClientRect();
                             this.div_height_ = bbox.height;
+                            this.heightChange.emit(this.div_height_);
                             this.div_width_ = bbox.width;
                             this.div_initial_top_ = bbox.top;
                             this.div_left_ = bbox.left;
                             this.div_top_ = this.div_initial_top_ - this.y_offset_;
                             this.do_resize_ = false;
+                            this.sticky_style_ = this.setStyles();
                         }
                     }
                 };
@@ -126,6 +132,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     //console.log('[Trace] onScroll()     is_fixed ' + this.is_div2_fixed_);
                     if (this.is_sticky_) {
                         this.is_div2_fixed_ = (window.pageYOffset >= this.y_offset_);
+                        this.sticky_style_ = this.setStyles();
                     }
                 };
                 //
@@ -144,6 +151,7 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         // update the div_height_ of fully scrollable sticky-div
                         var bbox = this.div2_elm_.getBoundingClientRect();
                         this.div_height_ = bbox.height;
+                        this.heightChange.emit(this.div_height_);
                     }
                 };
                 StickyDivCmp.instance_cnt_ = 0;
@@ -151,10 +159,14 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     core_1.Input(), 
                     __metadata('design:type', Object)
                 ], StickyDivCmp.prototype, "maxscroll", void 0);
+                __decorate([
+                    core_1.Output('height'), 
+                    __metadata('design:type', core_1.EventEmitter)
+                ], StickyDivCmp.prototype, "heightChange", void 0);
                 StickyDivCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-sticky-div',
-                        template: "\n  <!--\n    The 2 div below make the sticky div magic\n    We'll comment on the first after.\n    The second div includes the user content with ng-content,\n    after it has scrolled to it max position,\n    its position style is changed to 'fixed' with a high z-index, therefore\n    it remains always visible and the scrollable content located below\n    simply passes under it.\n\n    When the second div position is changed to 'fixed', it is removed from the\n    scrollable content, so we must add a content of the same height in place\n    of the the navbar. The first div is doing just this\n  -->\n\n    <div [id]=\"id_div_top_\"  (window:resize)=\"onResize()\">\n\n    <!-- div 1 -->\n\n    <div *ngIf=\"is_div2_fixed_\"\n      [style.height.px]=\"div_height_\"\n      [style.width.px]=\"div_width_\"\n      style=\"padding: 0; font-size: 12px; color: black; background-color: red\">\n      Ouch! If you see this text on the browser, you have a problem with\n      stick div id: {{id_div2_}}. It is likely that\n      the maxscroll value is not large enough, please\n      increase it.\n    </div>\n\n    <!-- div 2 -->\n\n    <div [id]=\"id_div2_\" [ngStyle]=\"setStyles()\"\n      (window:scroll)=\"onScroll()\">\n      <ng-content></ng-content>\n    </div>\n  </div>\n  ",
+                        template: "\n  <!--\n    The 2 div below make the sticky div magic\n    We'll comment on the first after.\n    The second div includes the user content with ng-content,\n    after it has scrolled to it max position,\n    its position style is changed to 'fixed' with a high z-index, therefore\n    it remains always visible and the scrollable content located below\n    simply passes under it.\n\n    When the second div position is changed to 'fixed', it is removed from the\n    scrollable content, so we must add a content of the same height in place\n    of the the navbar. The first div is doing just this\n  -->\n\n  <div [id]=\"id_div_top_\"  (window:resize)=\"onResize()\">\n\n    <!-- div 1 -->\n\n    <div *ngIf=\"is_div2_fixed_\"\n      [style.height.px]=\"div_height_\"\n      [style.width.px]=\"div_width_\"\n      style=\"padding: 0; font-size: 12px; color: black; background-color: red\">\n      Ouch! If you see this text on the browser, you have a problem with\n      stick div id: {{id_div2_}}. It is likely that\n      the maxscroll value is not large enough, please\n      increase it.\n    </div>\n\n    <!-- div 2 -->\n\n    <div [id]=\"id_div2_\" [ngStyle]=\"sticky_style_\"\n      (window:scroll)=\"onScroll()\">\n      <ng-content></ng-content>\n    </div>\n  </div>\n  ",
                         styles: ["\n  "],
                         directives: [common_1.NgIf, common_1.NgClass]
                     }), 

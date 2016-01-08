@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // header-end
 //
-System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser', './stickydivdemo/stickydivdemo', './sliderdemo/sliderdemo_simple', './sliderdemo/sliderdemo_service'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', './stickydivdemo/stickydivdemo', './sliderdemo/sliderdemo_simple', 'angular2/src/facade/lang'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -32,19 +32,15 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, browser_1, stickydivdemo_1, sliderdemo_simple_1, sliderdemo_service_1, core_2;
+    var core_1, router_1, stickydivdemo_1, sliderdemo_simple_1, lang_1;
     var HomeCmp, MainCmp;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-                core_2 = core_1_1;
             },
             function (router_1_1) {
                 router_1 = router_1_1;
-            },
-            function (browser_1_1) {
-                browser_1 = browser_1_1;
             },
             function (stickydivdemo_1_1) {
                 stickydivdemo_1 = stickydivdemo_1_1;
@@ -52,17 +48,24 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
             function (sliderdemo_simple_1_1) {
                 sliderdemo_simple_1 = sliderdemo_simple_1_1;
             },
-            function (sliderdemo_service_1_1) {
-                sliderdemo_service_1 = sliderdemo_service_1_1;
+            function (lang_1_1) {
+                lang_1 = lang_1_1;
             }],
         execute: function() {
             HomeCmp = (function () {
                 function HomeCmp() {
+                    this.mode_str_ = 'production mode';
+                    this.is_in_prod_mode_ = true;
+                    this.ng2version_ = '2.0.0-beta.0';
+                    if (lang_1.assertionsEnabled()) {
+                        this.mode_str_ = 'development mode';
+                        this.is_in_prod_mode_ = false;
+                    }
                 }
                 HomeCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-home',
-                        template: "\n    <div class=\"w3-theme-l3\">\n      <div class=\"w3-container w3-padding\">\n        <h1>Angular2 Demo and Tutorial</h1>\n      </div>\n    </div>\n    <div class=\"w3-text-theme\">\n      <div class=\"w3-container w3-padding\">\n        Two great demos are available:<br>\n        <a [routerLink]=\"['StickyDivDemoCmp']\" >Sticky Div Demo</a><br>\n        <a [routerLink]=\"['SliderDemoSimpleCmp']\" >Slider Demo</a><br>\n        <br>\n        <br>\n      </div>\n      <div class=\"w3-container w3-tiny\">\n        Page last updated 23-Dec-2015<br>\n        Log log all bugs <a href=\"https://github.com/meandemo/ng2-demo/issues\">here</a><br>\n        (c) <a href=\"http://www.ng2goodies.com\">ng2goodies</a><br>\n      </div>\n    </div>\n   ",
+                        template: "\n    <div class=\"w3-theme-l3\">\n      <div class=\"w3-container w3-padding\">\n        <h1>Angular2 Demo and Tutorial</h1>\n      </div>\n    </div>\n    <div class=\"w3-text-theme\">\n      <div class=\"w3-container w3-padding\">\n        Two great demos are available:<br>\n        <a [routerLink]=\"['StickyDivDemoCmp']\" >Sticky Div</a><br>\n        <a [routerLink]=\"['SliderDemoSimpleCmp']\" >SVG Based Slider</a><br>\n        <br>\n        <br>\n      </div>\n      <div class=\"w3-container w3-tiny\">\n        Using angular2 version {{ng2version_}} in {{mode_str_}}<br>\n        Page last updated 08-Jan-2016<br>\n        Log log all bugs <a href=\"https://github.com/meandemo/ng2-demo/issues\">here</a><br>\n        (c) <a href=\"http://www.ng2goodies.com\">ng2goodies</a><br>\n      </div>\n    </div>\n   ",
                         directives: [router_1.RouterLink, stickydivdemo_1.StickyDivDemoCmp, sliderdemo_simple_1.SliderDemoSimpleCmp]
                     }), 
                     __metadata('design:paramtypes', [])
@@ -74,7 +77,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
                 }
                 MainCmp = __decorate([
                     core_1.Component({
-                        selector: 'main-cmp',
+                        selector: 'gg-main',
                         template: "<router-outlet></router-outlet>",
                         directives: [router_1.RouterOutlet]
                     }),
@@ -87,11 +90,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/platform/browser'
                 ], MainCmp);
                 return MainCmp;
             })();
-            // With angular in 2.0.0-beta
-            // we stay in prod mode until our code refactoring is completed
-            //
-            core_2.enableProdMode();
-            browser_1.bootstrap(MainCmp, [router_1.ROUTER_PROVIDERS, sliderdemo_service_1.SliderDemoService]);
+            exports_1("MainCmp", MainCmp);
         }
     }
 });

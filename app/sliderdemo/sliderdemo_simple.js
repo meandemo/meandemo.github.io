@@ -107,6 +107,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     this.location_ = location_;
                     this.slider_demo_service_ = slider_demo_service_;
                     this.id_ = '000';
+                    this.std_slider_value_ = 25;
                     this.std_slider_ = new NumericalSlider(fb_, 0, 100, 25);
                     this.svg_slider_ = new NumericalSlider(fb_, 0, 100, 35);
                     this.std_ctrl_ = this.std_slider_.add_control();
