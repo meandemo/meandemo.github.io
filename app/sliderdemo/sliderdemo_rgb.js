@@ -50,6 +50,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     this.re_short_hex_ = /^#([\da-f])([\da-f])([\da-f])$/i;
                     this.form_ctrl_ = null;
                     this.hex_str_ = this.to_rgb_str(this.values_.red, this.values_.green, this.values_.blue);
+                    this.cell_hex_str_ = this.hex_str_;
                     this.form_ctrl_ = this.fb_.group({
                         hex_string: ['', function (c) { return _this.hex_string_validator(c); }]
                     });

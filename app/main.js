@@ -59,7 +59,7 @@ System.register(['angular2/core', 'angular2/router', './stickydivdemo/stickydivd
                 function HomeCmp() {
                     this.mode_str_ = 'production mode';
                     this.is_in_prod_mode_ = true;
-                    this.ng2version_ = '2.0.0-beta.0';
+                    this.ng2version_ = '2.0.0-beta.1';
                     if (lang_1.assertionsEnabled()) {
                         this.mode_str_ = 'development mode';
                         this.is_in_prod_mode_ = false;
@@ -68,7 +68,7 @@ System.register(['angular2/core', 'angular2/router', './stickydivdemo/stickydivd
                 HomeCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-home',
-                        template: "\n    <div class=\"w3-theme-l3\">\n      <div class=\"w3-container w3-padding\">\n        <h1>Angular2 Demo and Tutorial</h1>\n      </div>\n    </div>\n    <div class=\"w3-text-theme\">\n      <div class=\"w3-container w3-padding\">\n        Three great demos are available:<br>\n        <a [routerLink]=\"['StickyDivDemoCmp']\" >Sticky Div</a><br>\n        <a [routerLink]=\"['SliderDemoSimpleCmp']\" >SVG Based Slider</a><br>\n        <a [routerLink]=\"['SliderDemoRgbCmp']\" >SVG Based Color Selector with full form control</a><br>\n        <br>\n        <br>\n      </div>\n      <div class=\"w3-container w3-tiny\">\n        Using angular2 version {{ng2version_}} in {{mode_str_}}<br>\n        Page last updated 11-Jan-2016<br>\n        Log log all bugs <a href=\"https://github.com/meandemo/ng2-demo/issues\">here</a><br>\n        (c) <a href=\"http://www.ng2goodies.com\">ng2goodies</a><br>\n      </div>\n    </div>\n   ",
+                        template: "\n    <div class=\"w3-theme-l3\">\n      <div class=\"w3-container w3-padding\">\n        <h1>Angular2 Demo and Tutorial</h1>\n      </div>\n    </div>\n    <div class=\"w3-text-theme\">\n      <div class=\"w3-container w3-padding\">\n        Three great demos are available:<br>\n        <a [routerLink]=\"['StickyDivDemoCmp']\" >Sticky Div</a><br>\n        <a [routerLink]=\"['SliderDemoSimpleCmp']\" >SVG Based Slider</a><br>\n        <a [routerLink]=\"['SliderDemoRgbCmp']\" >SVG Based Color Selector with full form control</a><br>\n        <br>\n        <br>\n      </div>\n      <div class=\"w3-container w3-tiny\">\n        Using angular2 version {{ng2version_}} in {{mode_str_}}<br>\n        Page last updated 12-Jan-2016<br>\n        Log log all bugs <a href=\"https://github.com/meandemo/ng2-demo/issues\">here</a><br>\n        (c) <a href=\"http://www.ng2goodies.com\">ng2goodies</a><br>\n      </div>\n    </div>\n   ",
                         directives: [router_1.RouterLink, stickydivdemo_1.StickyDivDemoCmp, sliderdemo_simple_1.SliderDemoSimpleCmp]
                     }), 
                     __metadata('design:paramtypes', [])

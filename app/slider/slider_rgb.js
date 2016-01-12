@@ -108,6 +108,15 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.rail_length_ = 700;
                     }
                     this.rail_length_ = this.clip3(this.rail_length_, this.min_rail_length_, this.max_rail_length_);
+                    for (var i = 0; i < this.nb_runners_; ++i) {
+                        var v = (this.min_ + this.max_) / 2;
+                        var str = "value" + i;
+                        if (str in this) {
+                            v = Number(this[str]);
+                        }
+                        this.values_changed(v, i);
+                        this.emit(i);
+                    }
                 };
                 SvgSliderRgbCmp.prototype.values_changed = function (v, idx) {
                     this.value_[idx] = this.clip3(v, this.min_, this.max_);
