@@ -1,5 +1,5 @@
-System.register(['angular2/platform/browser', 'angular2/router', 'angular2/core', './main', './sliderdemo/sliderdemo_service'], function(exports_1) {
-    var browser_1, router_1, core_1, main_1, sliderdemo_service_1;
+System.register(['angular2/platform/browser', 'angular2/router', 'angular2/core', './main', './sliderdemo/sliderdemo_service', './slider/slider_dyn_service'], function(exports_1) {
+    var browser_1, router_1, core_1, main_1, sliderdemo_service_1, slider_dyn_service_1;
     return {
         setters:[
             function (browser_1_1) {
@@ -16,10 +16,13 @@ System.register(['angular2/platform/browser', 'angular2/router', 'angular2/core'
             },
             function (sliderdemo_service_1_1) {
                 sliderdemo_service_1 = sliderdemo_service_1_1;
+            },
+            function (slider_dyn_service_1_1) {
+                slider_dyn_service_1 = slider_dyn_service_1_1;
             }],
         execute: function() {
             core_1.enableProdMode();
-            browser_1.bootstrap(main_1.MainCmp, [router_1.ROUTER_PROVIDERS, sliderdemo_service_1.SliderDemoService])
+            browser_1.bootstrap(main_1.MainCmp, [router_1.ROUTER_PROVIDERS, sliderdemo_service_1.SliderDemoService, slider_dyn_service_1.DynSliderService])
                 .catch(function (err) {
                 console.error(err);
             });
