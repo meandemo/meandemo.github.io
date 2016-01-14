@@ -59,20 +59,20 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
                         this.slider_demo_service_.emit(3);
                     }
                 };
-                SliderDemoDynCmp.prototype.click_delete_runner = function (idx) {
-                    //console.log('[TRACE] Requesting delete of runner ', idx);
-                    var evt_data = { 'add': false, 'idx': idx, 'del': true, 'val': 0 };
+                SliderDemoDynCmp.prototype.click_delete_runner = function (runner) {
+                    //console.log('[TRACE] Requesting delete of runner ', runner);
+                    var evt_data = { 'del': true, 'runner': runner };
                     this.dyn_slider_service_.next(evt_data);
                 };
                 SliderDemoDynCmp.prototype.click_add_runner = function () {
                     //console.log('[TRACE] Requesting addition of a runner');
-                    var evt_data = { 'add': true, 'idx': 0, 'del': false, 'val': 0 };
+                    var evt_data = { 'add': true };
                     this.dyn_slider_service_.next(evt_data);
                 };
-                SliderDemoDynCmp.prototype.runner_pos_change = function (idx, evt) {
+                SliderDemoDynCmp.prototype.runner_pos_change = function (runner, evt) {
                     var val = evt.target.valueAsNumber;
-                    //console.log('[TRACE] Value[', idx, '] has changed to', val);
-                    var evt_data = { 'add': false, 'idx': idx, 'del': false, 'val': val };
+                    //console.log('[TRACE] Runner[', runner, '] has changed to', val);
+                    var evt_data = { 'runner': runner, 'val': val };
                     this.dyn_slider_service_.next(evt_data);
                 };
                 SliderDemoDynCmp.prototype.routerOnDeactivate = function (next, prev) {

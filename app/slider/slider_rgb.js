@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', '../../common/util', './runner'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,8 +8,8 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1;
-    var SvgSliderRgbCmp;
+    var core_1, common_1, util_1, runner_1;
+    var SvgRunnerRgbCmp, SvgSliderRgbCmp;
     return {
         setters:[
             function (core_1_1) {
@@ -17,8 +17,35 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
             },
             function (common_1_1) {
                 common_1 = common_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
+            },
+            function (runner_1_1) {
+                runner_1 = runner_1_1;
             }],
         execute: function() {
+            ///////////////////////////////////////////////////////////////////////////////
+            //
+            // Nested SVG: not working at the present time
+            // See: https://github.com/angular/angular/issues/1632
+            ///////////////////////////////////////////////////////////////////////////////
+            SvgRunnerRgbCmp = (function () {
+                function SvgRunnerRgbCmp() {
+                }
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Number)
+                ], SvgRunnerRgbCmp.prototype, "idx", void 0);
+                SvgRunnerRgbCmp = __decorate([
+                    core_1.Component({
+                        selector: 'g[rgb-pie]',
+                        template: "\n    <g id=\"circle\" [attr.transform]=\" 'rotate(' + (-110 + (idx * 40)) + ')' \" >\n      <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" ></path>\n      <g transform=\"rotate(120)\">\n        <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" ></path>\n        <g transform=\"rotate(120)\">\n          <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\"></path>\n        </g>\n      </g>\n    </g>\n    "
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], SvgRunnerRgbCmp);
+                return SvgRunnerRgbCmp;
+            })();
             ///////////////////////////////////////////////////////////////////////////////
             //
             // Slider RGB Selection: Three Runner Slider
@@ -32,61 +59,49 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     this.emit_value0_ = new core_1.EventEmitter();
                     this.emit_value1_ = new core_1.EventEmitter();
                     this.emit_value2_ = new core_1.EventEmitter();
-                    this.active_runner_ = [];
-                    this.value_ = [];
-                    this.rounded_value_ = [];
-                    this.pos_ = [];
-                    this.delta_ = [];
-                    this.base_ = [];
-                    this.button_is_down_ = false;
-                    this.trans_pos_ = [];
-                    this.label_offset_ = 0;
                     this.runners_ = [];
-                    this.runner_style_is_circle_ = true;
-                    this.runner_style_is_label_ = false;
+                    this.is_vertical_ = false;
+                    this.button_is_down_ = false;
                     this.tick_marks_ = [0, 50, 100, 150, 200, 255];
+                    var colors = ['red', 'green', 'blue'];
                     this.min_ = 0;
                     this.max_ = 255;
                     this.nb_runners_ = 3;
+                    this.rl_ = 700;
+                    this.min_rl_ = 10;
+                    this.max_rl_ = 4096;
+                    this.r2name_ = new Map();
                     for (var i = 0; i < this.nb_runners_; ++i) {
-                        this.value_.push(0);
-                        this.rounded_value_.push(0);
-                        this.pos_.push(0);
-                        this.delta_.push(0);
-                        this.base_.push(0);
-                        this.trans_pos_.push('');
-                        this.runners_.push("runner" + i);
-                        this.values_changed(50 + (50 * i), i);
+                        var runner = new runner_1.Runner(50 + (50 * i), this.min_, this.max_, this.rl_);
+                        this.runners_.push(runner);
+                        this.r2name_.set(runner, [colors[i], i]);
                     }
-                    this.rail_length_ = 700;
-                    this.min_rail_length_ = 10;
-                    this.max_rail_length_ = 4096;
                 }
-                SvgSliderRgbCmp.prototype.clip3 = function (v, min, max) {
-                    v = Number.isNaN(v) ? 0 : v;
-                    if (v < min) {
-                        return min;
+                SvgSliderRgbCmp.prototype.get_pos = function (v) {
+                    var pos = (this.rl_ * (v - this.min_)) / (this.max_ - this.min_);
+                    if (this.is_vertical_) {
+                        pos = this.rl_ - pos;
                     }
-                    if (v > max) {
-                        return max;
-                    }
-                    return v;
+                    return util_1.Util.clip3(pos, 0, this.rl_);
                 };
-                SvgSliderRgbCmp.prototype.value2pos = function (v) {
-                    var pos = (this.rail_length_ * (v - this.min_)) / (this.max_ - this.min_);
-                    return this.clip3(pos, 0, this.rail_length_);
+                SvgSliderRgbCmp.prototype.get_color = function (runner) {
+                    //console.log("[TRACE] get_color: ", (this.r2name_.get(runner))[0]);
+                    return (this.r2name_.get(runner))[0];
                 };
-                SvgSliderRgbCmp.prototype.pos2value = function (p) {
-                    var v = this.min_ + (p * (this.max_ - this.min_) / this.rail_length_);
-                    return this.clip3(v, this.min_, this.max_);
-                };
-                SvgSliderRgbCmp.prototype.emit = function (idx) {
+                SvgSliderRgbCmp.prototype.emit_runner_value = function (runner) {
+                    var idx = (this.r2name_.get(runner))[1];
                     var str = "emit_value" + idx + "_";
                     if (str in this) {
-                        this[str].emit(this.rounded_value_[idx]);
+                        var v = this.runners_[idx].get_value(true);
+                        this[str].emit(v);
                     }
                 };
                 SvgSliderRgbCmp.prototype.ngOnInit = function () {
+                    var _this = this;
+                    //console.log("[TRACE] ngOnInit() ");
+                    if ('vertical' in this) {
+                        this.is_vertical_ = true;
+                    }
                     if ('min' in this) {
                         this.min_ = Number(this.min);
                     }
@@ -102,63 +117,61 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.min_ = tmp;
                     }
                     if ('length' in this) {
-                        this.rail_length_ = Number(this.length);
+                        this.rl_ = Number(this.length);
                     }
                     else {
-                        this.rail_length_ = 700;
+                        this.rl_ = 700;
                     }
-                    this.rail_length_ = this.clip3(this.rail_length_, this.min_rail_length_, this.max_rail_length_);
-                    for (var i = 0; i < this.nb_runners_; ++i) {
-                        var v = (this.min_ + this.max_) / 2;
-                        var str = "value" + i;
-                        if (str in this) {
-                            v = Number(this[str]);
-                        }
-                        this.values_changed(v, i);
-                        this.emit(i);
-                    }
-                };
-                SvgSliderRgbCmp.prototype.values_changed = function (v, idx) {
-                    this.value_[idx] = this.clip3(v, this.min_, this.max_);
-                    this.rounded_value_[idx] = Math.round(v * 10) / 10;
-                    this.pos_[idx] = this.value2pos(v);
-                    this.trans_pos_[idx] = "translate(" + this.pos_[idx] + "," + this.label_offset_ + ")";
-                };
-                SvgSliderRgbCmp.prototype.position_changed = function (pos, idx) {
-                    this.pos_[idx] = this.clip3(pos, 0, this.rail_length_);
-                    this.trans_pos_[idx] = "translate(" + this.pos_[idx] + "," + this.label_offset_ + ")";
-                    this.value_[idx] = this.pos2value(this.pos_[idx]);
-                    this.rounded_value_[idx] = Math.round(this.value_[idx] * 10) / 10;
-                    this.emit(idx);
+                    this.rl_ = util_1.Util.clip3(this.rl_, this.min_rl_, this.max_rl_);
+                    this.runners_.forEach(function (runner, i, runners) {
+                        runner.set_direction(_this.is_vertical_);
+                        runner.update_rail_length(_this.rl_);
+                        _this.emit_runner_value(runner);
+                    });
                 };
                 //
                 // detecting changes and emit value
                 // value, min, max
                 // when the button is down, the changes
                 // to the runner position are emitted with mousemove
+                SvgSliderRgbCmp.prototype.get_min_of_values = function () {
+                    var min = this.max_;
+                    this.runners_.forEach(function (runner, i, runners) {
+                        min = Math.min(min, runner.get_value());
+                    });
+                    return min;
+                };
+                SvgSliderRgbCmp.prototype.get_max_of_values = function () {
+                    var max = this.min_;
+                    this.runners_.forEach(function (runner, i, runners) {
+                        max = Math.max(max, runner.get_value());
+                    });
+                    return max;
+                };
                 SvgSliderRgbCmp.prototype.ngOnChanges = function (changes) {
+                    var _this = this;
                     if (this.button_is_down_) {
                         return;
                     }
-                    for (var i = 0; i < this.nb_runners_; ++i) {
+                    this.runners_.forEach(function (runner, i, runners) {
                         var str = "value" + i;
                         if (changes[str]) {
                             var v = Number(changes[str].currentValue);
-                            if ((Number.isNaN(v)) || (v < this.min_) || (v > this.max_)) {
+                            if ((Number.isNaN(v)) || (v < _this.min_) || (v > _this.max_)) {
                                 // submitted value is invalid, emit the current value
-                                this.emit(i);
+                                _this.emit_runner_value(runner);
                             }
                             else {
                                 // it's a valid value => update runner position
                                 // but no need to emit the value in this case
                                 // as it is a valid external change.
-                                this.values_changed(v, i);
+                                runner.update_value(v);
                             }
                         }
-                    }
+                    });
                     if (changes['min']) {
                         var v = Number(changes['min'].currentValue);
-                        if ((Number.isNaN(v)) || (v > Math.min.apply(Math, this.value_))) {
+                        if (Number.isNaN(v) || (v > this.get_min_of_values())) {
                             // invalid change
                             if ('minChange' in this) {
                                 this.minChange.emit(this.min_);
@@ -167,14 +180,14 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         else {
                             // valid change, update runner position
                             this.min_ = v;
-                            for (var i = 0; i < this.nb_runners_; ++i) {
-                                this.values_changed(this.value_[i], i);
-                            }
+                            this.runners_.forEach(function (runner, i, runners) {
+                                runner.update_min(v);
+                            });
                         }
                     }
                     if (changes['max']) {
                         var v = Number(changes['max'].currentValue);
-                        if ((Number.isNaN(v)) || (v < Math.max.apply(Math, this.value_))) {
+                        if (Number.isNaN(v) || (v < this.get_max_of_values())) {
                             // invalid change
                             if ('maxChange' in this) {
                                 this.maxChange.emit(this.max_);
@@ -183,16 +196,30 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         else {
                             // valid change, update runner position
                             this.max_ = v;
-                            for (var i = 0; i < this.nb_runners_; ++i) {
-                                this.values_changed(this.value_[i], i);
+                            this.runners_.forEach(function (runner, i, runners) {
+                                runner.update_max(v);
+                            });
+                        }
+                    }
+                    if (changes['length']) {
+                        var v = Number(changes['length'].currentValue);
+                        if (Number.isNaN(v) || (v < this.get_max_of_values())) {
+                            // invalid change
+                            if ('lengthChange' in this) {
+                                this.maxChange.emit(this.max_);
                             }
+                        }
+                        else {
+                            // valid change, update runner position
+                            this.rl_ = v;
+                            this.runners_.forEach(function (runner, i, runners) {
+                                runner.update_rail_length(_this.rl_);
+                            });
                         }
                     }
                 };
                 SvgSliderRgbCmp.prototype.ngAfterViewInit = function () {
-                    this.runner_style_is_circle_ = true;
-                    this.runner_style_is_label_ = false;
-                    this.label_offset_ = 0;
+                    var _this = this;
                     if ('min' in this) {
                         this.min_ = Number(this.min);
                     }
@@ -208,26 +235,23 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                         this.min_ = tmp;
                     }
                     if ('length' in this) {
-                        this.rail_length_ = Number(this.length);
+                        this.rl_ = Number(this.length);
                     }
                     else {
-                        this.rail_length_ = 700;
+                        this.rl_ = 700;
                     }
-                    this.rail_length_ = this.clip3(this.rail_length_, this.min_rail_length_, this.max_rail_length_);
-                    for (var i = 0; i < this.nb_runners_; ++i) {
-                        var v = (this.min_ + this.max_) / 2;
-                        var str = "value" + i;
-                        if (str in this) {
-                            v = Number(this[str]);
-                        }
-                        this.values_changed(v, i);
-                        this.emit(i);
-                    }
+                    this.rl_ = util_1.Util.clip3(this.rl_, this.min_rl_, this.max_rl_);
+                    this.runners_.forEach(function (runner, i, runners) {
+                        runner.update_rail_length(_this.rl_);
+                        runner.update_min(_this.min_);
+                        runner.update_max(_this.max_);
+                        _this.emit_runner_value(runner);
+                    });
                 };
                 //
                 // Details on the position calculation
                 //
-                //                    initial               final          !onbutton       
+                //                    initial               final          !onbutton
                 //  [3]---------------------------------------------------------> (= evt.clientX)
                 //
                 //  |--------->@              (= base_  given by elm.getBoundingClientRect().left)
@@ -242,47 +266,54 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 //  [2]-----------------------------------------> (= evt.clientX)
                 //
                 //  On initial mouse down, we can compute delta as we have:
-                //  evt.clientX[1] = base + pos + offset   
+                //  evt.clientX[1] = base + pos + offset
                 //
                 //  On mouse move/up, we can compute npos_ given by
-                //  evt.clientX[2] = base + npos + offset   
+                //  evt.clientX[2] = base + npos + offset
                 //  => npos = evt.clientX[2] - (evt.clientX[1] - pos)
-                // 
-                //  Special case when rail is clicked [3], we assume a virtual [1], so we have: 
-                //  evt.clientX[3] = base + npos  
-                //  evt.clientX[1] = base + pos 
+                //
+                //  Special case when rail is clicked [3], we assume a virtual [1], so we have:
+                //  evt.clientX[3] = base + npos
+                //  evt.clientX[1] = base + pos
                 //  => npos = evt.clientX[3] - (evt.clientX[1]  - pos)
                 // Note the preventDefault to ensure that the future mouse events
                 // are not propagated to other elements
                 SvgSliderRgbCmp.prototype.onMousedown = function (elm, evt, on_button, idx) {
+                    var _this = this;
                     evt.preventDefault();
                     this.button_is_down_ = true;
-                    this.active_runner_ = [];
+                    this.active_runners_ = [];
+                    var evt_pos = this.is_vertical_ ? evt.clientY : evt.clientX;
                     if (!on_button) {
                         // special case when the mouse down occur on the slide zone
-                        // and not on the slider button
-                        for (var i = 0; i < this.nb_runners_; ++i) {
-                            this.delta_[i] = elm.getBoundingClientRect().left;
-                            var pos = evt.clientX - this.delta_[i];
-                            this.position_changed(pos, i);
-                            this.active_runner_.push(i);
-                        }
+                        // and not on the slider button:
+                        // all the sliders are selected and moved to that position
+                        var delta = this.is_vertical_ ? elm.getBoundingClientRect().top :
+                            elm.getBoundingClientRect().left;
+                        this.runners_.forEach(function (runner, i, runners) {
+                            runner.set_delta(delta);
+                            runner.update_position(evt_pos - delta);
+                            _this.active_runners_.push(runner);
+                            _this.emit_runner_value(runner);
+                        });
                     }
                     else {
-                        this.active_runner_.push(idx);
-                        this.delta_[idx] = evt.clientX - this.pos_[idx];
+                        this.active_runners_.push(this.runners_[idx]);
+                        this.runners_[idx].init_mouse_down_evt(evt_pos);
                     }
                 };
                 //
                 // this function can only be called when button_is_down_ is true
                 // as we have used a special div with *ngIf
                 // <div *ngIf="button_is_down_"  (window:mousemove)="onMousemove($event)" ..
-                //
+                // the release of the mouse button
+                // removes the div with the (window:mousemove) events
                 SvgSliderRgbCmp.prototype.onMousemove = function (evt) {
                     var _this = this;
-                    this.active_runner_.forEach(function (val, idx, arr) {
-                        var pos = evt.clientX - _this.delta_[val];
-                        _this.position_changed(pos, val);
+                    var evt_pos = this.is_vertical_ ? evt.clientY : evt.clientX;
+                    this.active_runners_.forEach(function (runner, i, runners) {
+                        runner.update_mouse_move_position(evt_pos);
+                        _this.emit_runner_value(runner);
                     });
                 };
                 //
@@ -317,6 +348,10 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                     __metadata('design:type', core_1.EventEmitter)
                 ], SvgSliderRgbCmp.prototype, "lengthChange", void 0);
                 __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Boolean)
+                ], SvgSliderRgbCmp.prototype, "vertical", void 0);
+                __decorate([
                     core_1.Input('red'), 
                     __metadata('design:type', Object)
                 ], SvgSliderRgbCmp.prototype, "value0", void 0);
@@ -343,9 +378,10 @@ System.register(['angular2/core', 'angular2/common'], function(exports_1) {
                 SvgSliderRgbCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-svg-slider-rgb',
-                        template: "\n    <div  id=\"slider\" style=\"margin:5px\">\n\n      <!-- special div which disables mousemove and mouseup event -->\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n\n      <svg  height=\"100\" preserveAspectRatio=\"xMinYMin meet\"\n            xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-60 -40 800 100\" version=\"1.1\" >\n\n        <!-- reference (0,0), no fill, no stroke -->\n\n        <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n        <!-- rail group -->\n\n        <g id=\"ruler\" (mousedown)=\"onMousedown(railref, $event, false)\">\n          <path [attr.d]=\"'M 0,0 h' + (rail_length_)\" style=\"stroke-width:2px;stroke:black\" />\n          <g *ngFor=\"#_val of tick_marks_\">\n            <path [attr.d]=\"'M' + (_val * rail_length_ / 255) + ',0 v 30'\" style=\"stroke-width:2px;stroke:black\" />\n            <text [attr.x]=\"_val * rail_length_ /255\" y=50 text-anchor=\"middle\" font-size=\"20\">{{_val}}</text>\n          </g>\n        </g>\n\n        <!-- runner group -->\n        <!--\n          <rect id=\"default-rail\" x=\"0\" y=\"-3\" [attr.width]=\"rail_length_\" height=\"7\" style=\"fill:white;stroke-width:2px;stroke:black\" />\n          <path [attr.d]=\"'M0,0 L ' + rail_length_ + ',0' \" style=\"stroke-width:2px;stroke:black\" />\n            <path [attr.d]=\"'M 0,' + (_val * rail_length_ / 255) + 'v 30'\" style=\"fill:grey;stroke:black\">\n            <circle cx=\"0\" cy=\"0\" [r]=\"10 + _idx * 5\" />\n        -->\n\n        <g *ngFor=\"#_name of runners_; #_idx = index\"\n            [id]=\"_name\" \n            [attr.transform]=\"trans_pos_[_idx]\"\n            (mousedown)=\"onMousedown(railref, $event, true, _idx)\" >\n          \n          <g id=\"circle\" [attr.transform]=\" 'rotate(' + (-110 + (_idx * 40)) + ')' \" >\n            <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n            <g transform=\"rotate(120)\">\n              <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n              <g transform=\"rotate(120)\">\n                <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n              </g>\n            </g>\n          </g>\n        </g>\n\n      </svg>\n    </div>\n  ",
-                        styles: ["\n  "],
-                        directives: [common_1.FORM_DIRECTIVES, common_1.NgFor]
+                        template: "\n    <div  id=\"slider\" style=\"margin:5px\">\n\n      <!-- special div which disables mousemove and mouseup event -->\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n\n      <!--              -->\n      <!-- Horizontal   -->\n      <!--              -->\n\n      <div *ngIf=!is_vertical_>\n        <svg height=\"100\" preserveAspectRatio=\"xMinYMin meet\"\n          xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-60 -40 800 100\" version=\"1.1\" >\n\n          <!-- reference (0,0), no fill, no stroke -->\n\n          <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n          <g id=\"rail\" (mousedown)=\"onMousedown(railref, $event, false)\">\n            <path [attr.d]=\"'M 0,-5 v 10 h' + (rl_) + ' v -10 z'\"\n                  style=\"stroke-width:2px;stroke:black;fill:violet\" />\n          </g>\n\n          <g *ngFor=\"#_val of tick_marks_\">\n            <path [attr.d]=\"'M' + get_pos(_val) + ',5 v 30'\" style=\"stroke-width:2px;stroke:black\" />\n            <text [attr.x]=\"get_pos(_val)\" y=50 text-anchor=\"middle\" font-size=\"20\">{{_val}}</text>\n          </g>\n\n          <g *ngFor=\"#_runner of runners_; #_idx = index\"\n              [id]=\"get_color(_runner)\" class=\"rgb-runner\"\n              [attr.transform]=\"'translate(' + _runner.get_pos() + ', 0)'\"\n              (mousedown)=\"onMousedown(railref, $event, true, _idx)\" >\n\n            <g id=\"circle\" [attr.transform]=\" 'rotate(' + (-110 + (_idx * 40)) + ')' \" >\n              <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n              <g transform=\"rotate(120)\">\n                <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n                <g transform=\"rotate(120)\">\n                  <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n                </g>\n              </g>\n            </g>\n            -->\n          </g>\n\n        </svg>\n      </div>\n\n      <!--              -->\n      <!-- Vertical     -->\n      <!--              -->\n\n      <div *ngIf=is_vertical_>\n        <svg width=\"120\" preserveAspectRatio=\"xMinYMin meet\"\n             xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"'-40 -60 120 ' + (rl_ + 100)\" version=\"1.1\" >\n\n          <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n          <g id=\"rail\" (mousedown)=\"onMousedown(railref, $event, false)\">\n            <path [attr.d]=\"'M -5,0 h 10 v' + (rl_) + ' h -10 z'\"\n                style=\"stroke-width:2px;stroke:black;fill:violet\" />\n          </g>\n\n          <g *ngFor=\"#_val of tick_marks_\">\n            <path [attr.d]=\"'M 5,' + get_pos(_val) + ' h 30'\" style=\"stroke-width:2px;stroke:black\" />\n            <text [attr.y]=\"get_pos(_val)\" x=35 baseline-shift=\"-30%\" font-size=\"20\">{{_val}}</text>\n          </g>\n          <g *ngFor=\"#_runner of runners_; #_idx = index\"\n              [id]=\"get_color(_runner)\" class=\"rgb-runner\"\n              [attr.transform]=\"'translate(0, ' + _runner.get_pos() + ')'\"\n              (mousedown)=\"onMousedown(railref, $event, true, _idx)\" >\n\n            <g id=\"circle\" [attr.transform]=\"'rotate(' + (-110 + (_idx * 40)) + ')' \" >\n              <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n              <g transform=\"rotate(120)\">\n                <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n                <g transform=\"rotate(120)\">\n                  <path id=\"pie\" d=\"M 0 0 h 20 A 20,20 0 0,1 14.321 12.855 Z\" />\n                </g>\n              </g>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  ",
+                        styleUrls: ["./css/slider_rgb.css"
+                        ],
+                        directives: [common_1.FORM_DIRECTIVES, common_1.NgIf, common_1.NgFor]
                     }), 
                     __metadata('design:paramtypes', [])
                 ], SvgSliderRgbCmp);

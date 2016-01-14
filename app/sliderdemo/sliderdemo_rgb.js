@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lipsum/lipsum', '../slider/slider_rgb', '../sliderdemo/sliderdemo_service'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lipsum/lipsum', '../slider/slider_rgb', '../sliderdemo/sliderdemo_service', '../../common/util'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,7 +11,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, common_1, router_1, lipsum_1, slider_rgb_1, sliderdemo_service_1;
+    var core_1, common_1, router_1, lipsum_1, slider_rgb_1, sliderdemo_service_1, util_1;
     var SliderDemoRgbCmp;
     return {
         setters:[
@@ -32,6 +32,9 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
             },
             function (sliderdemo_service_1_1) {
                 sliderdemo_service_1 = sliderdemo_service_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             // Slider Demo RGB
@@ -49,7 +52,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     this.re_long_hex_ = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i;
                     this.re_short_hex_ = /^#([\da-f])([\da-f])([\da-f])$/i;
                     this.form_ctrl_ = null;
-                    this.hex_str_ = this.to_rgb_str(this.values_.red, this.values_.green, this.values_.blue);
+                    this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                     this.cell_hex_str_ = this.hex_str_;
                     this.form_ctrl_ = this.fb_.group({
                         hex_string: ['', function (c) { return _this.hex_string_validator(c); }]
@@ -64,7 +67,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     set: function (r) {
                         //console.log("TRACE: set red value", this.values_.red);
                         this.values_.red = r;
-                        this.hex_str_ = this.to_rgb_str(this.values_.red, this.values_.green, this.values_.blue);
+                        this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
                     },
                     enumerable: true,
@@ -78,7 +81,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     set: function (r) {
                         //console.log("TRACE: set green value", this.values_.green);
                         this.values_.green = r;
-                        this.hex_str_ = this.to_rgb_str(this.values_.red, this.values_.green, this.values_.blue);
+                        this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
                     },
                     enumerable: true,
@@ -92,30 +95,12 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     set: function (r) {
                         //console.log("TRACE: set blue value", this.values_.blue);
                         this.values_.blue = r;
-                        this.hex_str_ = this.to_rgb_str(this.values_.red, this.values_.green, this.values_.blue);
+                        this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
                     },
                     enumerable: true,
                     configurable: true
                 });
-                SliderDemoRgbCmp.prototype.rgb2str = function (v) {
-                    v = Math.round(v);
-                    if (v < 0) {
-                        return '00';
-                    }
-                    else if (v > 255) {
-                        return 'ff';
-                    }
-                    else if (v < 16) {
-                        return '0' + v.toString(16);
-                    }
-                    else {
-                        return v.toString(16);
-                    }
-                };
-                SliderDemoRgbCmp.prototype.to_rgb_str = function (r, g, b) {
-                    return '#' + this.rgb2str(r) + this.rgb2str(g) + this.rgb2str(b);
-                };
                 SliderDemoRgbCmp.prototype.routerOnActivate = function (next, prev) {
                     //console.log('Activate:   navigating from ', prev);
                     //console.log('            navigating to ', next);
@@ -199,7 +184,6 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     core_1.Component({
                         selector: 'gg-slider-demo-rgb',
                         templateUrl: 'app/sliderdemo/sliderdemo_rgb.html',
-                        //events: ['colorChange'],
                         directives: [lipsum_1.LipsumCmp, slider_rgb_1.SvgSliderRgbCmp]
                     }),
                     __param(2, core_1.Inject(core_1.forwardRef(function () { return sliderdemo_service_1.SliderDemoService; }))), 
