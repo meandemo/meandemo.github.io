@@ -54,6 +54,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     this.form_ctrl_ = null;
                     this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                     this.cell_hex_str_ = this.hex_str_;
+                    this.color_name_ = util_1.HexColor2Name.translate(this.hex_str_);
                     this.form_ctrl_ = this.fb_.group({
                         hex_string: ['', function (c) { return _this.hex_string_validator(c); }]
                     });
@@ -69,6 +70,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                         this.values_.red = r;
                         this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
+                        this.color_name_ = util_1.HexColor2Name.translate(this.hex_str_);
                     },
                     enumerable: true,
                     configurable: true
@@ -83,6 +85,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                         this.values_.green = r;
                         this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
+                        this.color_name_ = util_1.HexColor2Name.translate(this.hex_str_);
                     },
                     enumerable: true,
                     configurable: true
@@ -97,6 +100,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                         this.values_.blue = r;
                         this.hex_str_ = util_1.Util.rgb2str(this.values_.red, this.values_.green, this.values_.blue);
                         this.cell_hex_str_ = this.hex_str_;
+                        this.color_name_ = util_1.HexColor2Name.translate(this.hex_str_);
                     },
                     enumerable: true,
                     configurable: true
@@ -146,6 +150,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                         //console.log("CURRENT = ", this.hex_str_);
                         //this.hex_str_ = s;
                         this.cell_hex_str_ = s;
+                        this.color_name_ = util_1.HexColor2Name.translate(s);
                         return null;
                     }
                     res = s.match(this.re_short_hex_);

@@ -13,7 +13,7 @@
   stroke: black;
   fill: blue; }
 
-.rgb-runner :hover {
+.rgb-runner:hover {
   opacity: 0.8; }
 
 /*# sourceMappingURL=slider_rgb.css.map */

@@ -7,11 +7,6 @@ System.register(['../../common/util'], function(exports_1) {
                 util_1 = util_1_1;
             }],
         execute: function() {
-            ///////////////////////////////////////////////////////////////////////////////
-            //
-            // Common Runner Class
-            //
-            ///////////////////////////////////////////////////////////////////////////////
             Runner = (function () {
                 function Runner(val, min, max, rl) {
                     this.val_ = 0; // exact value

@@ -76,16 +76,16 @@ div #slider #rail {
   stroke: black;
   fill: red; }
 
-div #slider #runner {
+g.runner {
+  cursor: pointer; }
+
+g.runner:hover {
   cursor: pointer; }
 
 div #slider #runner #circle {
   opacity: 0.6;
   stroke: black;
   fill: yellow; }
-
-div #slider #runner:hover {
-  opacity: 0.8; }
 
 div #slider #rail:hover {
   opacity: 0.8; }
