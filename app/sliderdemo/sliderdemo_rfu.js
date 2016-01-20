@@ -22,12 +22,12 @@ System.register(['angular2/core', '../lipsum/lipsum'], function(exports_1) {
             // Slider: 001
             Slider001Cmp = (function () {
                 function Slider001Cmp() {
-                    this.id_ = '001';
+                    this.id_ = '002';
                 }
                 Slider001Cmp = __decorate([
                     core_1.Component({
                         selector: 'gg-slider-001',
-                        template: "\n    <p>This is slider {{id_}}\n    </p>\n    <form>\n      <input type=\"range\" name=\"points0\" min=\"0\" max=\"100\" style=\"width: 100px;\">\n    </form>\n    <form>\n      <input type=\"range\" name=\"points1\" min=\"0\" max=\"100\" style=\"width: 100px;\">\n    </form>\n    <gg-lipsum></gg-lipsum>\n  ",
+                        template: "\n    <p>This is slider {{id_}}\n    </p>\n    <form>\n      <input type=\"range\" name=\"points0\" min=\"0\" max=\"100\" style=\"width: 50px;\">\n    </form>\n    <form>\n      <input type=\"range\" name=\"points1\" min=\"0\" max=\"100\" style=\"width: 50px;\">\n    </form>\n  ",
                         directives: [lipsum_1.LipsumCmp]
                     }), 
                     __metadata('design:paramtypes', [])

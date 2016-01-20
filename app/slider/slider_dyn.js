@@ -46,6 +46,10 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                     this.button_is_down_ = false;
                     this.tick_marks_ = [0, 20, 40, 60, 80, 100];
                     this.nb_ticks_ = 6;
+                    this.is_vertical_ = false;
+                    this.is_special_ = false;
+                    this.hide_rail_ = false;
+                    this.hide_runners_ = false;
                     this.min_ = 0;
                     this.max_ = 100;
                     this.nb_runners_ = 3;
@@ -56,19 +60,19 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                         var runner = new runner_1.Runner(20 + (20 * i), this.min_, this.max_, this.rl_);
                         this.runners_.push(runner);
                     }
-                    //console.log("[TRACE] constructor value = ", this.value_);
-                    //console.log("[TRACE] pos   = ", this.pos_);
-                    //console.log("[TRACE] trans = ", this.trans_pos_);
+                    // console.log("[TRACE] constructor value = ", this.value_);
+                    // console.log("[TRACE] pos   = ", this.pos_);
+                    // console.log("[TRACE] trans = ", this.trans_pos_);
                     dyn_slider_service_.subscribe({
                         next: function (data) {
                             if (data.add) {
-                                //console.log('[TRACE] Receive add slider request');
+                                // console.log('[TRACE] Receive add slider request');
                                 var runner = new runner_1.Runner(0, _this.min_, _this.max_, _this.rl_);
                                 _this.runners_.push(runner);
                                 _this.emit_full();
                             }
                             else if (data.del) {
-                                console.log('[TRACE] Receive remove slider request:', data.runner);
+                                // console.log('[TRACE] Receive remove slider request:', data.runner);
                                 var idx;
                                 idx = _this.runners_.findIndex(function (runner) {
                                     return (runner === data.runner);
@@ -77,7 +81,7 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                                 _this.emit_full();
                             }
                             else {
-                                //console.log('[TRACE] Receive update slider request:', data.idx, ' with value ', data.val);
+                                // console.log('[TRACE] Receive update slider request:', data.idx, ' with value ', data.val);
                                 data.runner.update_value(data.val);
                             }
                         }
@@ -100,12 +104,22 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                             data['value'] = runner.get_value(true);
                             datas.push(data);
                         });
-                        //console.log('[TRACE] Dyn emit* ', datas);
+                        // console.log('[TRACE] Dyn emit* ', datas);
                         this[str].emit(datas);
                     }
                 };
-                SvgSliderDynCmp.prototype.ngOnChanges = function () {
-                    console.log('[TRACE] ngOnChanges');
+                SvgSliderDynCmp.prototype.ngOnChanges = function (changes) {
+                    if (this.button_is_down_) {
+                        return;
+                    }
+                    if (changes['hiderail']) {
+                        var v = changes['hiderail'].currentValue;
+                        this.hide_rail_ = (v === true);
+                    }
+                    if (changes['hiderunners']) {
+                        var v = changes['hiderunners'].currentValue;
+                        this.hide_runners_ = (v === true);
+                    }
                 };
                 SvgSliderDynCmp.prototype.ngOnInit = function () {
                     /*
@@ -125,6 +139,10 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                     }
                     if ('max' in this) {
                         this.max_ = Number(this.max);
+                    }
+                    if ('special' in this) {
+                        // console.log("[TRACE] RGB ngAfterViewInit() special is true");
+                        this.is_special_ = true;
                     }
                     if (this.max_ === this.min_) {
                         this.max_ = this.min_ + 1;
@@ -147,6 +165,13 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                     });
                     this.emit_full();
                     this.tick_marks_ = util_1.Util.create_ticks(this.nb_ticks_, this.min_, this.max_);
+                };
+                SvgSliderDynCmp.prototype.onMouseclick = function (elm, evt, drunner) {
+                    var idx = this.runners_.findIndex(function (runner) {
+                        return (runner === drunner);
+                    });
+                    this.runners_.splice(idx, 1);
+                    this.emit_full();
                 };
                 //
                 // Details on the position calculation
@@ -184,7 +209,7 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                     this.active_runners_ = [];
                     if (!on_button) {
                         // special case when the mouse down occur on the slide zone
-                        // and not on the slider button: 
+                        // and not on the slider button:
                         // we add a slider here
                         var runner = new runner_1.Runner(0, this.min_, this.max_, this.rl_);
                         var delta = elm.getBoundingClientRect().left;
@@ -247,13 +272,25 @@ System.register(['angular2/core', 'angular2/common', '../slider/slider_dyn_servi
                     __metadata('design:type', Boolean)
                 ], SvgSliderDynCmp.prototype, "vertical", void 0);
                 __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Boolean)
+                ], SvgSliderDynCmp.prototype, "special", void 0);
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Boolean)
+                ], SvgSliderDynCmp.prototype, "hiderail", void 0);
+                __decorate([
+                    core_1.Input(), 
+                    __metadata('design:type', Boolean)
+                ], SvgSliderDynCmp.prototype, "hiderunners", void 0);
+                __decorate([
                     core_1.Output('values'), 
                     __metadata('design:type', core_1.EventEmitter)
                 ], SvgSliderDynCmp.prototype, "emit_values_", void 0);
                 SvgSliderDynCmp = __decorate([
                     core_1.Component({
                         selector: 'gg-svg-slider-dyn',
-                        template: "\n    <div id=\"slider\" style=\"margin:5px\">\n\n      <!-- special div which disables mousemove and mouseup event -->\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n\n      <svg height=\"120\" preserveAspectRatio=\"xMinYMin meet\"\n             xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"'-60 -40 ' + (rl_ + 100) + ' 120'\" version=\"1.1\" >\n\n        <!-- reference (0,0), no fill, no stroke -->\n\n        <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n        <!-- rail group -->\n\n        <g id=\"rail\" (mousedown)=\"onMousedown(railref, $event, false)\">\n          <path [attr.d]=\"'M 0,-5 v 10 h' + (rl_) + ' v -10 z'\" style=\"stroke-width:2px;stroke:black;fill:violet\" />\n        </g>\n\n        <!-- tick marks -->\n\n        <g *ngFor=\"#_val of tick_marks_\">\n          <path [attr.d]=\"'M' + get_pos(_val) + ',5 v 30'\" style=\"stroke-width:2px;stroke:black\" />\n          <text [attr.x]=\"get_pos(_val)\" y=50 text-anchor=\"middle\" font-size=\"20\">{{_val}}</text>\n        </g>\n\n        <g *ngFor=\"#_runner of runners_; #_idx = index\"\n            [id]=\"_runner.get_id()\"\n            [attr.transform]=\"'translate(' + _runner.get_pos() + ', 0)'\">\n          <g class=\"runner\"\n            (mousedown)=\"onMousedown(railref, $event, true, _idx)\" >\n            <path id=\"panel\" d=\"M 0 0 L 10 -10 L 30 -10 L 30 -35 L -30 -35 L -30 -10 L -10 -10 z\"\n                  style=\"color:black;fill:black\" />\n            <text id=\"text\" x=\"0\" y=\"-17\" text-anchor=\"middle\"\n                font-family=\"Verdana\" font-size=\"10\" fill=\"white\">{{_runner.get_id()}}\n            </text>\n          </g>\n        </g>\n\n      </svg>\n    </div>\n  ",
+                        template: "\n    <div id=\"slider\" style=\"margin:0px\">\n\n      <!-- special div which disables mousemove and mouseup event -->\n      <div *ngIf=\"button_is_down_\" style=\"position:relative\"\n           (window:mousemove)=\"onMousemove($event)\"\n           (window:mouseup)=\"onMouseup($event)\" >\n      </div>\n\n      <svg [attr.height]=\"is_special_  ? 80 : 120\" preserveAspectRatio=\"xMinYMin meet\"\n             xmlns=\"http://www.w3.org/2000/svg\"\n             [attr.viewBox]=\"(is_special_ ? -40 : -60) + ' -40 ' + (rl_ + 80) + ' ' + (is_special_ ? 80: 120)\" version=\"1.1\" >\n\n        <!-- reference (0,0), no fill, no stroke -->\n\n        <rect #railref  x=\"0\" y=\"0\" width=\"1\" height=\"1\" style=\"fill:none;stroke:none\"  />\n\n        <!-- rail group -->\n\n        <g *ngIf=\"!hide_rail_\" >\n          <g id=\"rail\" (mousedown)=\"onMousedown(railref, $event, false)\">\n            <path *ngIf=\"is_special_\"  [attr.d]=\"'M 0,-5 v 6  h' + (rl_) + ' v -6 z'\" style=\"fill:white\" />\n            <path *ngIf=\"!is_special_\" [attr.d]=\"'M 0,-5 v 10 h' + (rl_) + ' v -10 z'\" style=\"stroke-width:2px;stroke:black;fill:violet\" />\n          </g>\n\n          <!-- tick marks -->\n          <g *ngIf=\"!is_special_\" *ngFor=\"#_val of tick_marks_\">\n            <path [attr.d]=\"'M' + get_pos(_val) + ',5 v 30'\" style=\"stroke-width:2px;stroke:black\" />\n            <text [attr.x]=\"get_pos(_val)\" y=50 text-anchor=\"middle\" font-size=\"20\">{{_val}}</text>\n          </g>\n        </g>\n\n        <!-- runners group -->\n        <g *ngIf=\"!hide_runners_\">\n          <g *ngFor=\"#_runner of runners_; #_idx = index\"\n              [id]=\"_runner.get_id()\"\n              [attr.transform]=\"'translate(' + _runner.get_pos() + ', 0)'\">\n            <g class=\"runner\"\n              (mousedown)=\"onMousedown(railref, $event, true, _idx)\" >\n              <path *ngIf=\"!is_special_\" id=\"panel\" d=\"M 0 0 L 10 -10 L 30 -10 L 30 -35 L -30 -35 L -30 -10 L -10 -10 z\"\n                    style=\"color:black;fill:black\" />\n              <text *ngIf=\"!is_special_\" id=\"text\" x=\"0\" y=\"-17\" text-anchor=\"middle\"\n                  font-family=\"Verdana\" font-size=\"10\" fill=\"white\">{{_runner.get_id()}}\n              </text>\n              <path *ngIf=\"is_special_\" id=\"panel\" d=\"M 0 0 L 10  10 L 20  10 L 20  35 L -20  35 L -20  10 L -10  10 z\"\n                    style=\"color:black;fill:black;stroke:white;stroke-width:1px\" />\n\n              <g *ngIf=\"is_special_\" (click)=\"onMouseclick(railref, $event, _runner)\">\n                <rect x=\"10\" y=\"25\" width=\"9\" height=\"9\" style=\"fill:white\"  />\n                <path d=\"M 12 27 L 18 33\"\n                    style=\"stroke:black;stroke-width:1px\" />\n                <path d=\"M 18 27 L 12 33\"\n                    style=\"stroke:black;stroke-width:1px\" />\n              </g>\n            </g>\n          </g>\n        </g>\n      </svg>\n    </div>\n  ",
                         styles: ["\n  "],
                         directives: [common_1.FORM_DIRECTIVES, common_1.NgFor]
                     }), 

@@ -1,10 +1,10 @@
-System.register(['angular2/core', '../sliderdemo/sliderdemo_simple', '../sliderdemo/sliderdemo_rfu'], function(exports_1) {
+System.register(['angular2/core', '../sliderdemo/sliderdemo_simple', '../sliderdemo/sliderdemo_rgb', '../sliderdemo/sliderdemo_dyn', '../sliderdemo/sliderdemo_gradient', '../sliderdemo/sliderdemo_rfu'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var core_1, sliderdemo_simple_1, sliderdemo_rfu_1;
+    var core_1, sliderdemo_simple_1, sliderdemo_rgb_1, sliderdemo_dyn_1, sliderdemo_gradient_1, sliderdemo_rfu_1;
     var views_, SliderDemoService;
     return {
         setters:[
@@ -13,6 +13,15 @@ System.register(['angular2/core', '../sliderdemo/sliderdemo_simple', '../sliderd
             },
             function (sliderdemo_simple_1_1) {
                 sliderdemo_simple_1 = sliderdemo_simple_1_1;
+            },
+            function (sliderdemo_rgb_1_1) {
+                sliderdemo_rgb_1 = sliderdemo_rgb_1_1;
+            },
+            function (sliderdemo_dyn_1_1) {
+                sliderdemo_dyn_1 = sliderdemo_dyn_1_1;
+            },
+            function (sliderdemo_gradient_1_1) {
+                sliderdemo_gradient_1 = sliderdemo_gradient_1_1;
             },
             function (sliderdemo_rfu_1_1) {
                 sliderdemo_rfu_1 = sliderdemo_rfu_1_1;
@@ -27,25 +36,46 @@ System.register(['angular2/core', '../sliderdemo/sliderdemo_simple', '../sliderd
                     linkIndex: 1
                 },
                 {
+                    component: sliderdemo_rgb_1.SliderDemoRgbCmp,
+                    name: 'SliderDemoRgbCmp',
+                    pathName: 'rgbslider',
+                    linkName: 'Rgb Sliders',
+                    linkIndex: 2
+                },
+                {
+                    component: sliderdemo_dyn_1.SliderDemoDynCmp,
+                    name: 'SliderDemoDynCmp',
+                    pathName: 'dynslider',
+                    linkName: 'Dynamic Sliders',
+                    linkIndex: 3
+                },
+                {
+                    component: sliderdemo_gradient_1.SliderDemoGradientCmp,
+                    name: 'SliderDemoGradientCmp',
+                    pathName: 'gradientlider',
+                    linkName: 'Gradient with Sliders',
+                    linkIndex: 4
+                },
+                {
                     component: sliderdemo_rfu_1.Slider001Cmp,
                     name: 'Slider001Cmp',
                     pathName: 'multisliders',
-                    linkName: 'Multiple Sliders',
-                    linkIndex: 2
+                    linkName: 'RFU Multiple Sliders',
+                    linkIndex: 5
                 },
                 {
                     component: sliderdemo_rfu_1.Slider002Cmp,
                     name: 'Slider002Cmp',
                     pathName: 'verticalslider',
-                    linkName: 'Vertical Sliders',
-                    linkIndex: 3
+                    linkName: 'RFU Vertical Sliders',
+                    linkIndex: 6
                 },
                 {
                     component: sliderdemo_rfu_1.Slider003Cmp,
                     name: 'Slider003Cmp',
                     pathName: 'linkedslider',
-                    linkName: 'Linked Sliders',
-                    linkIndex: 4
+                    linkName: 'RFU Linked Sliders',
+                    linkIndex: 7
                 }
             ];
             SliderDemoService = (function (_super) {

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/common', 'angular2/router', 'angular2/http'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', 'angular2/router', '../http'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -25,36 +25,41 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', 'angular
                 http_1 = http_1_1;
             }],
         execute: function() {
-            ///////////////////////////////////////////////////////////////////////////////
-            //
-            // A 404 Page Catcher
-            //
-            // We've added a special http request to retrieve the URL
-            // which has triggered the error route.
-            //
-            ///////////////////////////////////////////////////////////////////////////////
             ErrorCmp = (function () {
-                function ErrorCmp(http_) {
+                function ErrorCmp(http_, location_) {
                     var _this = this;
                     this.http_ = http_;
+                    this.location_ = location_;
                     this.is_error_ = false;
-                    http_.get('api/public/v1/errorurl').subscribe(function (response) {
-                        _this.error_url_ = response.text();
-                        _this.is_error_ = (_this.error_url_ !== '/error');
-                    }, function (error) {
-                        _this.is_error_ = false;
-                        console.log('ERR =', error.text());
+                    http_.get_error_url('api/public/v1/errorurl');
+                    http_.subscribe({
+                        next: function (data) {
+                            _this.error_url_ = data.url;
+                            _this.is_error_ = data.flag;
+                        }
                     });
+                    /*
+                    .subscribe(
+                      (response: any) => {
+                        this.error_url_ = response.text();
+                        this.is_error_ = (this.error_url_ !== '/error');
+                      },
+                      (error: any) => {
+                        this.is_error_ = false;
+                        console.log('ERR =', error.text());
+                      }
+                    );
+                    */
                 }
                 ErrorCmp = __decorate([
+                    core_1.Injectable(),
                     core_1.Component({
                         selector: 'gg-error',
-                        bindings: [http_1.HTTP_BINDINGS],
                         template: "\n  <div *ngIf=\"is_error_\">\n    Error,<br>\n    The requested url: {{error_url_}} does not exists.<br>\n  </div>\n  <div *ngIf=\"!is_error_\">\n    This is the site error page.<br>\n    You've done a reload of this page, haven't you?<br>\n    Or you've typed/pasted the url in the browser url bar.<br>\n  </div>\n  You can get back to the home page now!<br>\n  <a [routerLink]=\"['HomeCmp']\"><i class=\"fa fa-home w3-large\"></i></a>\n  ",
                         styles: ["\n  "],
                         directives: [router_1.RouterLink, common_1.NgIf]
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [http_1.CustomHttp, router_1.Location])
                 ], ErrorCmp);
                 return ErrorCmp;
             })();
