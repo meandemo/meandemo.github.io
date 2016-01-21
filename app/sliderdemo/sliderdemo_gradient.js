@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../slider/slider_rgb', '../slider/slider_dyn', '../sliderdemo/sliderdemo_service', '../slider/slider_dyn_service', '../../common/util'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../slider/slider_rgb', '../slider/slider_dyn', '../sliderdemo/sliderdemo_service', '../slider/slider_dyn_service', '../../common/util', '../animation/animations'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,7 +11,7 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, lipsum_1, slider_rgb_1, slider_dyn_1, sliderdemo_service_1, slider_dyn_service_1, util_1;
+    var core_1, router_1, lipsum_1, slider_rgb_1, slider_dyn_1, sliderdemo_service_1, slider_dyn_service_1, util_1, animations_1;
     var SliderDemoGradientCmp;
     return {
         setters:[
@@ -38,6 +38,9 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
             },
             function (util_1_1) {
                 util_1 = util_1_1;
+            },
+            function (animations_1_1) {
+                animations_1 = animations_1_1;
             }],
         execute: function() {
             SliderDemoGradientCmp = (function () {
@@ -379,9 +382,9 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
                     core_1.Component({
                         selector: 'gg-slider-demo-gradient',
                         templateUrl: 'app/sliderdemo/sliderdemo_gradient.html',
-                        styles: ["\n\n    div#container {\n      width: 100%;\n      height: 500px;\n      position: relative;\n      background: none;\n    }\n    div#container-control {\n      font-size: 12px;\n      padding: 12px;\n      width: 100%;\n      height: 100px;\n      background: black;\n      color: white;\n    }\n\n    div#canvas-enclosure {\n      width: 100%;\n      height: 100%;\n      position: absolute;\n      top: 0px;\n      left: 0px;\n      z-index: 5;\n      background: none;\n    }\n\n    canvas#canvas {\n      position: absolute;\n      top: 0px;\n      left: 0px;\n      z-index: 6;\n      background: none;\n    }\n\n    div#hslider {\n      width: 100%;\n      height: 80px;\n      position: absolute;\n      bottom: 0px;\n      left: 0px;\n      z-index: 30;\n      background: none;\n    }\n\n    div#vslider {\n      margin: 0px;\n      width: 80px;\n      height: 100%;\n      background: none;\n      position: absolute;\n      top: 0px;\n      left: 250px;\n      background: none;\n      z-index: 20;\n    }\n}\n  "],
+                        styles: ["\n\n    div#container {\n      width: 100%;\n      height: 500px;\n      position: relative;\n      background: none;\n    }\n    div#container-control {\n      font-size: 12px;\n      width: 100%;\n      background: black;\n      color: white;\n    }\n    div#animate-control {\n      font-size: 12px;\n      width: 100%;\n      height: 20px;\n      background: black;\n      color: white;\n    }\n\n    div#canvas-enclosure {\n      width: 100%;\n      height: 100%;\n      position: absolute;\n      top: 0px;\n      left: 0px;\n      z-index: 5;\n      background: none;\n    }\n\n    canvas#canvas {\n      position: absolute;\n      top: 0px;\n      left: 0px;\n      z-index: 6;\n      background: none;\n    }\n\n    div#hslider {\n      width: 100%;\n      height: 80px;\n      position: absolute;\n      bottom: 0px;\n      left: 0px;\n      z-index: 30;\n      background: none;\n    }\n\n    div#vslider {\n      margin: 0px;\n      width: 80px;\n      height: 100%;\n      background: none;\n      position: absolute;\n      top: 0px;\n      left: 250px;\n      background: none;\n      z-index: 20;\n    }\n}\n  "],
                         //styleUrls: ['css/sliderdemo_gradient.css'],
-                        directives: [lipsum_1.LipsumCmp, slider_rgb_1.SvgSliderRgbCmp, slider_dyn_1.SvgSliderDynCmp]
+                        directives: [animations_1.AnimateHeightDrctv, lipsum_1.LipsumCmp, slider_rgb_1.SvgSliderRgbCmp, slider_dyn_1.SvgSliderDynCmp]
                     }),
                     __param(2, core_1.Inject(core_1.forwardRef(function () { return sliderdemo_service_1.SliderDemoService; }))), 
                     __metadata('design:paramtypes', [router_1.Location, slider_dyn_service_1.DynSliderService, sliderdemo_service_1.SliderDemoService])
