@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../slider/slider_dyn', '../sliderdemo/sliderdemo_service', '../slider/slider_dyn_service'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../slider/slider_dyn', '../sliderdemo/sliderdemo_service', '../slider/slider_service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,7 +11,7 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
     var __param = (this && this.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var core_1, router_1, lipsum_1, slider_dyn_1, sliderdemo_service_1, slider_dyn_service_1;
+    var core_1, router_1, lipsum_1, slider_dyn_1, sliderdemo_service_1, slider_service_1;
     var SliderDemoDynCmp;
     return {
         setters:[
@@ -30,18 +30,18 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
             function (sliderdemo_service_1_1) {
                 sliderdemo_service_1 = sliderdemo_service_1_1;
             },
-            function (slider_dyn_service_1_1) {
-                slider_dyn_service_1 = slider_dyn_service_1_1;
+            function (slider_service_1_1) {
+                slider_service_1 = slider_service_1_1;
             }],
         execute: function() {
             // Dynamic Slider Demo 
             SliderDemoDynCmp = (function () {
-                function SliderDemoDynCmp(location_, dyn_slider_service_, slider_demo_service_) {
+                function SliderDemoDynCmp(location_, slider_service_, slider_demo_service_) {
                     //this.form_ctrl_ = this.fb_.group({
                     //  hex_string: [ '', (c: Control): {[key: string]: any} => { return this.hex_string_validator(c); } ]
                     //});
                     this.location_ = location_;
-                    this.dyn_slider_service_ = dyn_slider_service_;
+                    this.slider_service_ = slider_service_;
                     this.slider_demo_service_ = slider_demo_service_;
                     this.length_ = 600;
                     //console.log('DEBUG: hex_str = ', this.hex_str_);
@@ -62,18 +62,18 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
                 SliderDemoDynCmp.prototype.click_delete_runner = function (runner) {
                     //console.log('[TRACE] Requesting delete of runner ', runner);
                     var evt_data = { 'del': true, 'runner': runner };
-                    this.dyn_slider_service_.emit(evt_data);
+                    this.slider_service_.emit(evt_data);
                 };
                 SliderDemoDynCmp.prototype.click_add_runner = function () {
                     //console.log('[TRACE] Requesting addition of a runner');
                     var evt_data = { 'add': true };
-                    this.dyn_slider_service_.emit(evt_data);
+                    this.slider_service_.emit(evt_data);
                 };
                 SliderDemoDynCmp.prototype.runner_pos_change = function (runner, evt) {
                     var val = evt.target.valueAsNumber;
                     //console.log('[TRACE] Runner[', runner, '] has changed to', val);
                     var evt_data = { 'runner': runner, 'val': val };
-                    this.dyn_slider_service_.emit(evt_data);
+                    this.slider_service_.emit(evt_data);
                 };
                 SliderDemoDynCmp.prototype.routerOnDeactivate = function (next, prev) {
                     //console.log('Deactivate: navigating from ', prev);
@@ -90,7 +90,7 @@ System.register(['angular2/core', 'angular2/router', '../lipsum/lipsum', '../sli
                         directives: [lipsum_1.LipsumCmp, slider_dyn_1.SvgSliderDynCmp]
                     }),
                     __param(2, core_1.Inject(core_1.forwardRef(function () { return sliderdemo_service_1.SliderDemoService; }))), 
-                    __metadata('design:paramtypes', [router_1.Location, slider_dyn_service_1.DynSliderService, sliderdemo_service_1.SliderDemoService])
+                    __metadata('design:paramtypes', [router_1.Location, slider_service_1.SliderService, sliderdemo_service_1.SliderDemoService])
                 ], SliderDemoDynCmp);
                 return SliderDemoDynCmp;
             })();

@@ -71,32 +71,11 @@ form {
   border-radius: 5px;
   width: 50%; }
 
-div #slider #rail {
-  opacity: 0.6;
-  stroke: black;
-  fill: red; }
-
-g.runner {
-  cursor: pointer; }
-
-g.runner:hover {
-  cursor: pointer; }
-
-div #slider #runner #circle {
-  opacity: 0.6;
-  stroke: black;
-  fill: yellow; }
-
-div #slider #rail:hover {
-  opacity: 0.8; }
-
-div #rail text {
-  opacity: 1.0;
-  font-family: Consolas, monospace, sans-serif;
-  font-size: 15px; }
-
 table .color-demo {
   width: 40%; }
+
+#circle.runner {
+  fill: #556B2F !important; }
 
 input#hex.ng-valid {
   border-right: 10px solid green; }

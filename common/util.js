@@ -42,6 +42,18 @@ System.register([], function(exports_1) {
                 Util.rgb2str = function (r, g, b) {
                     return '#' + Util.to_hex(r) + Util.to_hex(g) + Util.to_hex(b);
                 };
+                Util.str2rgb = function (hex) {
+                    var re_long_hex_ = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i;
+                    var re_short_hex_ = /^#([\da-f])([\da-f])([\da-f])$/i;
+                    var res = [0, 0, 0];
+                    var tokens = hex.match(re_long_hex_);
+                    if (tokens) {
+                        res[0] = parseInt(tokens[1], 16);
+                        res[1] = parseInt(tokens[2], 16);
+                        res[2] = parseInt(tokens[3], 16);
+                    }
+                    return res;
+                };
                 Util.clip3 = function (v, min, max) {
                     v = isNaN(v) ? 0 : v;
                     if (v < min) {
@@ -52,6 +64,14 @@ System.register([], function(exports_1) {
                     }
                     return v;
                 };
+                // create a vector of nb_ticks values 
+                // evenly spaced which includes min and max
+                // nb_ticks must be >= 2
+                // example with 5 values
+                //  min                         max
+                //   +======+======+======+======+
+                // v[0]   v[1]   v[2]   v[3]    v[4]
+                //
                 Util.create_ticks = function (nb_ticks, min, max) {
                     var delta = (max - min) / (nb_ticks - 1);
                     var res = [min];
@@ -61,6 +81,24 @@ System.register([], function(exports_1) {
                         res.push(Math.round(data));
                     }
                     res.push(max);
+                    return res;
+                };
+                // create a vector of nb_values values 
+                // evenly spaced between min and max
+                // example with 3 values
+                // nb_values >= 1
+                //  min                         max
+                //   +======+======+======+======+
+                //         v[0]   v[1]   v[2]
+                //
+                Util.create_values = function (nb_values, min, max) {
+                    var delta = (max - min) / (nb_values + 1);
+                    var res = [];
+                    var data = min;
+                    for (var i = 0; i < nb_values; i++) {
+                        data += delta;
+                        res.push(Math.round(data));
+                    }
                     return res;
                 };
                 return Util;

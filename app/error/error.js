@@ -30,34 +30,24 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../http
                     var _this = this;
                     this.http_ = http_;
                     this.location_ = location_;
-                    this.is_error_ = false;
-                    http_.get_error_url('api/public/v1/errorurl');
-                    http_.subscribe({
-                        next: function (data) {
-                            _this.error_url_ = data.url;
-                            _this.is_error_ = data.flag;
-                        }
+                    this.error_state_ = 'forbidden';
+                    var obs = http_.get_error_url();
+                    obs.subscribe(function (response) {
+                        // console.log('[TRACE obs.subscribe response = ', response);
+                        _this.error_url_ = response.text();
+                        _this.error_state_ = (_this.error_url_ === '/error') ? 'reloaded' : 'normal';
+                    }, function (error) {
+                        _this.error_state_ = 'forbidden';
+                        // console.log('ERR =', error.text());
                     });
-                    /*
-                    .subscribe(
-                      (response: any) => {
-                        this.error_url_ = response.text();
-                        this.is_error_ = (this.error_url_ !== '/error');
-                      },
-                      (error: any) => {
-                        this.is_error_ = false;
-                        console.log('ERR =', error.text());
-                      }
-                    );
-                    */
                 }
                 ErrorCmp = __decorate([
                     core_1.Injectable(),
                     core_1.Component({
                         selector: 'gg-error',
-                        template: "\n  <div *ngIf=\"is_error_\">\n    Error,<br>\n    The requested url: {{error_url_}} does not exists.<br>\n  </div>\n  <div *ngIf=\"!is_error_\">\n    This is the site error page.<br>\n    You've done a reload of this page, haven't you?<br>\n    Or you've typed/pasted the url in the browser url bar.<br>\n  </div>\n  You can get back to the home page now!<br>\n  <a [routerLink]=\"['HomeCmp']\"><i class=\"fa fa-home w3-large\"></i></a>\n  ",
+                        template: "\n  <div [ngSwitch]=\"error_state_\">\n    <div *ngSwitchWhen=\"'forbidden'\">\n      Error,<br>\n      The previous request from server did not trigger a 404 response.<br>\n      You're running a test or you've hit the 'back' button of your browser.<br>\n    </div>\n    <div *ngSwitchWhen=\"'reloaded'\">\n      Error,<br>\n      You've done a reload of this page, haven't you?<br>\n      Either through a manual reload or a livereload or <br>\n      you've typed/pasted the /error url in the browser url bar.<br>\n    </div>\n    <div *ngSwitchWhen=\"'normal'\">\n      Error,<br>\n      The requested url: {{error_url_}} does not exists.<br>\n    </div>\n    <div *ngSwitchDefault>\n      Internal Error<br>\n      The internal state value is incorrect (state value is {{error_state_}}).\n       The requested url: {{error_url_}} does not exists.<br>\n    </div>\n  </div>  \n  <br>\n  <br>\n  You can get back to the home page now!<br>\n  <a [routerLink]=\"['HomeCmp']\"><i class=\"fa fa-home w3-large\"></i></a>\n  ",
                         styles: ["\n  "],
-                        directives: [router_1.RouterLink, common_1.NgIf]
+                        directives: [router_1.RouterLink, common_1.NgSwitch, common_1.NgSwitchWhen, common_1.NgSwitchDefault]
                     }), 
                     __metadata('design:paramtypes', [http_1.CustomHttp, router_1.Location])
                 ], ErrorCmp);

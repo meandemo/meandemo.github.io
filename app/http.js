@@ -1,9 +1,4 @@
 System.register(['angular2/core', 'angular2/http'], function(exports_1) {
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -54,17 +49,16 @@ System.register(['angular2/core', 'angular2/http'], function(exports_1) {
             
             */
             //              @Inject(forwardRef(() => SliderDemoService)) private slider_demo_service_: SliderDemoService ) {
-            CustomHttp = (function (_super) {
-                __extends(CustomHttp, _super);
+            CustomHttp = (function () {
                 //private str_: string;
                 //get str_() {
                 //  console.log('TRACE: str_ has changed', this.str_);
                 //  return this.str_;
                 //}
                 function CustomHttp(http_) {
-                    _super.call(this);
                     this.http_ = http_;
-                    //@Inject(forwardRef(() => Http)) private http_: Http) {
+                    // super();
+                    // @Inject(forwardRef(() => Http)) private http_: Http) {
                     console.log('CustomHTTP constructor');
                 }
                 CustomHttp.prototype.request = function (url, options) {
@@ -78,43 +72,23 @@ System.register(['angular2/core', 'angular2/http'], function(exports_1) {
                     });
                 };
                 CustomHttp.prototype.get = function (url, options) {
-                    console.log('CustomHTTP GET1 ', url);
-                    console.log('CustomHTTP GET2 ', options);
+                    // console.log('CustomHTTP GET1 ', url);
+                    // console.log('CustomHTTP GET2 ', options);
                     //  let res = this.http_.get(url, options);
                     //  console.log('GET res()', res);
                     //  return res;
                     //    console.log('GET subscribe()');
                     return this.http_.get(url, options).subscribe(function (res) {
-                        console.log('GET subscribe()');
+                        // console.log('GET subscribe()');
                         var warn = res.headers.get('Warning');
                         if (warn) {
-                            console.log('Received: Warning = ', warn);
                         }
                     });
                 };
-                //
-                // when the server request has completed
-                // we emit the string answer
-                //
-                CustomHttp.prototype.get_error_url = function (url, options) {
-                    var _this = this;
-                    console.log('CustomHTTP GET*1 ', url);
-                    console.log('CustomHTTP GET*2 ', options);
-                    this.http_.get(url, options).subscribe(function (res) {
-                        var str = res.text();
-                        var is_error = (str === '') || (str === null) || (str !== '/error');
-                        _this.emit({ url: str, flag: is_error });
-                        console.log('CustomHTTP GET*3 ', res.text());
-                    });
-                    //    next: (res: Response) => {
-                    //      console.log('NEXT ACTIVATED =', data);
-                    //      this.error_url_ = data;
-                    //      if (this.error_url_ === null) {
-                    //        this.is_error_ = true;
-                    //      } else {
-                    //        this.is_error_ = (this.error_url_ !== '/error');
-                    //      }
-                    //    }
+                CustomHttp.prototype.get_error_url = function () {
+                    var error_api = 'api/public/v1/errorurl';
+                    // console.log('CustomHTTP GET*1 ', error_api);
+                    return this.http_.get(error_api, null);
                 };
                 CustomHttp.prototype.post = function (url, body, options) {
                     return this.http_.post(url, body, options);
@@ -137,7 +111,7 @@ System.register(['angular2/core', 'angular2/http'], function(exports_1) {
                     __metadata('design:paramtypes', [http_1.Http])
                 ], CustomHttp);
                 return CustomHttp;
-            })(core_1.EventEmitter);
+            })();
             exports_1("CustomHttp", CustomHttp);
         }
     }

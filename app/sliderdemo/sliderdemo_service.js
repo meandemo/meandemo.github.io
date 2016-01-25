@@ -52,7 +52,7 @@ System.register(['angular2/core', '../sliderdemo/sliderdemo_simple', '../sliderd
                 {
                     component: sliderdemo_gradient_1.SliderDemoGradientCmp,
                     name: 'SliderDemoGradientCmp',
-                    pathName: 'gradientlider',
+                    pathName: 'gradientslider',
                     linkName: 'Gradient with Sliders',
                     linkIndex: 4
                 },

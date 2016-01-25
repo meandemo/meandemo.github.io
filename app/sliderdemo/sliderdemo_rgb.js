@@ -45,7 +45,7 @@ System.register(['angular2/core', 'angular2/common', 'angular2/router', '../lips
                     this.location_ = location_;
                     this.slider_demo_service_ = slider_demo_service_;
                     this.values_ = { 'red': 55, 'green': 105, 'blue': 155 };
-                    this.length_ = 600;
+                    this.length_ = 500;
                     // Note: I could not find a way to capture the 3 fields
                     // with /^#([\da-f]{2}){3}$/i  => so I unrolled the 3 captures
                     //

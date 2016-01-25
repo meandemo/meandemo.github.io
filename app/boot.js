@@ -1,5 +1,5 @@
-System.register(['angular2/platform/browser', 'angular2/router', 'angular2/common', 'angular2/core', 'angular2/http', './http', './main', './sliderdemo/sliderdemo_service', './slider/slider_dyn_service'], function(exports_1) {
-    var browser_1, router_1, common_1, core_1, http_1, http_2, main_1, sliderdemo_service_1, slider_dyn_service_1;
+System.register(['angular2/platform/browser', 'angular2/router', 'angular2/common', 'angular2/core', 'angular2/http', './http', './main', './sliderdemo/sliderdemo_service', './slider/slider_service'], function(exports_1) {
+    var browser_1, router_1, common_1, core_1, http_1, http_2, main_1, sliderdemo_service_1, slider_service_1;
     return {
         setters:[
             function (browser_1_1) {
@@ -26,8 +26,8 @@ System.register(['angular2/platform/browser', 'angular2/router', 'angular2/commo
             function (sliderdemo_service_1_1) {
                 sliderdemo_service_1 = sliderdemo_service_1_1;
             },
-            function (slider_dyn_service_1_1) {
-                slider_dyn_service_1 = slider_dyn_service_1_1;
+            function (slider_service_1_1) {
+                slider_service_1 = slider_service_1_1;
             }],
         execute: function() {
             core_1.enableProdMode();
@@ -39,7 +39,7 @@ System.register(['angular2/platform/browser', 'angular2/router', 'angular2/commo
                     },
                     deps: [http_1.Http] }),
                 //                    NavBarService, MainRouteService,
-                sliderdemo_service_1.SliderDemoService, slider_dyn_service_1.DynSliderService])
+                sliderdemo_service_1.SliderDemoService, slider_service_1.SliderService])
                 .catch(function (err) {
                 console.error(err);
             });

@@ -5,23 +5,25 @@ System.register(['angular2/core'], function(exports_1) {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var core_1;
-    var DynSliderService;
+    var SliderService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            DynSliderService = (function (_super) {
-                __extends(DynSliderService, _super);
-                function DynSliderService() {
-                    _super.call(this);
+            SliderService = (function (_super) {
+                __extends(SliderService, _super);
+                function SliderService() {
+                    // The 'false' argument passed to the super function 
+                    // allows a synchronous event emitter.
+                    _super.call(this, false);
                     this.idx_ = 1;
                     this.instance_count_ = 0;
                 }
-                return DynSliderService;
+                return SliderService;
             })(core_1.EventEmitter);
-            exports_1("DynSliderService", DynSliderService);
+            exports_1("SliderService", SliderService);
         }
     }
 });
